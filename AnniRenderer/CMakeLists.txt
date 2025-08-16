@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.15)
-#find_package(Vulkan REQUIRED)
+cmake_minimum_required(VERSION 3.30)
+
 #if (MSVC)
 add_compile_options(/std:c++latest)
 set(BUILD_SHARED_LIBS FALSE)
