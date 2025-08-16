@@ -1,6 +1,7 @@
 This project is the refactory of original Anni graphics renderer: https://github.com/CretaceousConstructor/Anni.
 
 There are several externl librarys on which Anni relys:\
+  vcpkg : Package manager.\
   vulkan-hpp: CPP binding of vulkan.\
   fastgltf : For fast parallel loading of gltf model files.\
   glfw : Windows system integration.\
@@ -9,4 +10,4 @@ There are several externl librarys on which Anni relys:\
   ktx : For loading ktx images.\
   std_image: For loading stb images.\
   vma : GPU memory allocation.\
-  vcpkg : Package manager.\
+
