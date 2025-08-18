@@ -44,12 +44,14 @@ namespace Anni2
 		void SetNumDisbatchedPassesOnCurQueue(size_t n);
 
 		std::pair<vk::CommandBuffer, vk::Semaphore> GetOneCmdBufAndAssociatedSem();
-		void FinalizeGeneralRendering(std::vector<vk::Semaphore> waiting_sems,const uint32_t cur_frame, vk::Semaphore frame_num_semaphore);
+		void FinalizeGeneralRendering(std::vector<vk::Semaphore> waiting_sems, const uint32_t cur_frame, vk::Semaphore frame_num_semaphore);
 
 		vk::Semaphore GetTimeLineSem();
 		vk::CommandBuffer GetOneCmdBuf();
 		std::pair<vk::CommandBuffer, Queue* const> BeginSingleTimeCommands();
 		//void EndSingleTimeCopyCommands(std::pair<vk::CommandBuffer, Queue* const> cmd_buf_and_q, std::shared_ptr<TimelineSemWrapper> sem);
+
+		vk::CommandPool CreateCommandPool(const vk::CommandPoolCreateFlagBits create_flag_bits);
 
 	public:
 		std::unordered_map<vk::CommandBuffer, vk::Semaphore> cmdbuf_to_sem;
@@ -60,9 +62,13 @@ namespace Anni2
 		QueueCapability                     queue_cap;
 
 		vk::UniqueSemaphore                 timeline_semaphore;
-		vk::UniqueCommandPool               cmd_pool;
+
+		std::vector<vk::UniqueCommandPool>  cmd_pools;
+		vk::CommandPool                     main_transient_cmd_pool{ nullptr };
+		vk::CommandPool                     main_resettable_cmd_pool{ nullptr };
 
 		std::unordered_set<vk::CommandBuffer> cmd_bufs;
+
 		DeviceManager& device_man;
 	};
 

@@ -1,13 +1,12 @@
-This project is the refactory of original Anni graphics renderer: https://github.com/CretaceousConstructor/Anni.
+This project is the refactory of original Anni(stands for "annihilation") graphics renderer: https://github.com/CretaceousConstructor/Anni.
 
 There are several externl librarys on which Anni relys:\
-  vcpkg : Package manager.\
-  vulkan-hpp: CPP binding of vulkan.\
-  fastgltf : For fast parallel loading of gltf model files.\
-  glfw : Windows system integration.\
-  glm : A commonly used math library.\
-  imgui : For GUI used in the renderer.\
-  ktx : For loading ktx images.\
-  std_image: For loading stb images.\
-  vma : GPU memory allocation.\
-
+&ensp; vcpkg : Package manager.\
+&ensp; vulkan-hpp: CPP binding of vulkan.\
+&ensp; fastgltf : For fast parallel loading of gltf model files.\
+&ensp; glfw     : Windows system integration.\
+&ensp; glm      : A commonly used math library.\
+&ensp; imgui    : For GUI used in the engine.\
+&ensp; ktx      : For loading ktx images.\
+&ensp; std_image: For loading stb images.\
+&ensp; vma      : GPU memory allocation.

@@ -33,7 +33,7 @@ namespace Anni2
 		//std::shared_ptr<TimelineSemWrapper>& GetSemUsedToTransfer();
 
 	public:
-		//void TransitionImageLayout(VkImageLayout oldLayout, VkImageLayout newLayout, const DeviceManager::CommandPoolType command_type, std::optional<VkImageSubresourceRange> subresource_range) const;
+		void TransitionImageLayoutOnQueueImmediately(vk::ImageLayout oldLayout, vk::ImageLayout newLayout, std::optional<vk::ImageSubresourceRange> subresource_range, std::optional<Queue*> queue_used_to_transition = std::nullopt) const;
 
 		//这个函数目前没有被使用，是为了让用户取解决具体该怎么写image barrier，而不是通过一堆if else去假设。
 		//void TransitionImageLayout(Sync::VkImageMemoryBarrierEnhanced mem_barrier_enhanced, const DeviceManager::CommandPoolType command_type) const;
@@ -41,12 +41,14 @@ namespace Anni2
 	protected:
 		GraphicsComponent& gfx;
 		DeviceManager& device_manager;
+		QueueManager&  queue_manager;
 	protected:
 		vk::Image         image;
 		ImageCIEnhanced vk_image_CI;
 
 	protected:
 		Queue* queue_used_to_tranfer{ nullptr };
+		std::optional<Queue*> last_queue_used;
 		//std::shared_ptr<TimelineSemWrapper> sem_used_to_transfer;
 
 

@@ -124,23 +124,55 @@ namespace Anni2
 		device_man(device_man_)
 	{
 		const vk::Device logical_device = device_man.GetLogicalDevice();
-
 		//*****************************************************************
 		constexpr vk::SemaphoreTypeCreateInfo timelineCreateInfo(vk::SemaphoreType::eTimeline, 0, VK_NULL_HANDLE);
 		const vk::SemaphoreCreateInfo createInfo(vk::SemaphoreCreateFlags(VK_ZERO_FLAG), &timelineCreateInfo);
-		auto [result0, timeline_semaphore] = logical_device.createSemaphoreUnique(createInfo);
+		auto [result0, timeline_semaphore_tmp] = logical_device.createSemaphoreUnique(createInfo);
 		assert(vk::Result::eSuccess == result0);
+		timeline_semaphore = std::move(timeline_semaphore_tmp);
+		//*****************************************************************
+		const vk::CommandPoolCreateInfo transient_command_pool_CI(
+			vk::CommandPoolCreateFlagBits::eTransient,
+			queue_cap.queue_family_index,
+			VK_NULL_HANDLE
+		);
+		auto [result1, tmp_cmd_pool_transient] = logical_device.createCommandPoolUnique(transient_command_pool_CI);
+		assert(vk::Result::eSuccess == result1);
+		main_transient_cmd_pool = tmp_cmd_pool_transient.get();
+		cmd_pools.emplace_back(std::move(tmp_cmd_pool_transient));
 		//*****************************************************************
 
-		const vk::CommandPoolCreateInfo command_pool_CI(
+		const vk::CommandPoolCreateInfo resettable_command_pool_CI(
 			vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
 			queue_cap.queue_family_index,
 			VK_NULL_HANDLE
 		);
-		auto [result1, cmd_pool] = logical_device.createCommandPoolUnique(command_pool_CI);
+		auto [result1, tmp_cmd_pool_resettable] = logical_device.createCommandPoolUnique(resettable_command_pool_CI);
 		assert(vk::Result::eSuccess == result1);
+		main_resettable_cmd_pool = tmp_cmd_pool_resettable.get();
+		cmd_pools.emplace_back(std::move(tmp_cmd_pool_resettable));
 		//*****************************************************************
 	}
+
+	vk::CommandPool Queue::CreateCommandPool(const vk::CommandPoolCreateFlagBits create_flag_bits) 
+	{
+		const vk::Device logical_device = device_man.GetLogicalDevice();
+		//*****************************************************************
+		const vk::CommandPoolCreateInfo command_pool_CI(
+			create_flag_bits,
+			queue_cap.queue_family_index,
+			VK_NULL_HANDLE
+		);
+
+		auto [result, tmp_cmd_pool] = logical_device.createCommandPoolUnique(command_pool_CI);
+		assert(vk::Result::eSuccess == result);
+		const auto result_ptr = tmp_cmd_pool.get();
+		cmd_pools.emplace_back(std::move(tmp_cmd_pool));
+		return result_ptr;
+	}
+
+
+
 
 	Queue::~Queue()
 	{
@@ -281,7 +313,7 @@ namespace Anni2
 
 		return { temp_buf.front(), this };
 	}
-	
+
 	/*
 	void Queue::EndSingleTimeCopyCommands(std::pair<vk::CommandBuffer, Queue* const> cmd_buf_and_q,
 										  std::shared_ptr<TimelineSemWrapper> sem)
@@ -316,6 +348,6 @@ namespace Anni2
 		//TODO: command bufferªÿ ’
 		//vkFreeCommandBuffers(device, command_pool, 1, &command_buffer);
 	}
-	
+
 	k*/
 }        // namespace Anni

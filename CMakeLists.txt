@@ -38,6 +38,4 @@ add_subdirectory(third_part)
 add_subdirectory(AnniBase)
 add_subdirectory(AnniRenderer)
 
-
-
 #set_property(TARGET AnniRenderer PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}") #为了方便debug时，文件路径能正确
